@@ -1,7 +1,6 @@
-# UnityTemplateRepository
-Unity Project template Repository
+# MasterMemory v3 for Unity Test
 
-# Demo
+MasterMemory v3 for Unityのテストプロジェクト
 
 # requirements
-* Unity 2022.2.0f1
+* Unity 6000.0.38f1
