@@ -3,34 +3,32 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using MasterMemory;
-using MessagePack;
 
 namespace MM
 {
-    // マスターデータの型定義（惑星マスタ）
-    [MemoryTable("planet"), MessagePackObject(true)]
-    public record PlanetMaster
+    // MasterMemoryへCSVから構築するための例（DatabaseBuilderを利用）
+    public static class MasterMemoryLoader
     {
-        [PrimaryKey] public int Id { get; init; }
-        public string Name { get; init; }
-        public string NameJP { get; init; }
-        public int RotationCenterPlanetId { get; init; }
-        public float Radius { get; init; }
-        public float Gravity { get; init; }
-        public float OrbitalSpeed { get; init; }
-        public float LightIntensity { get; init; }
-        public float LightOuterRadius { get; init; }
-    }
+        /// <summary>
+        /// CSVテキストからMasterMemory用のMemoryDatabaseを構築する
+        /// </summary>
+        /// <param name="csvText">CSVテキスト</param>
+        /// <returns>構築されたMemoryDatabase</returns>
+        public static MemoryDatabase BuildDatabaseFromCSV(string csvText)
+        {
+            var records = ParsePlanetMasterData(csvText);
+            var builder = new DatabaseBuilder();
+            builder.Append(records.ToArray());
+            byte[] dbBinary = builder.Build();
+            return new MemoryDatabase(dbBinary);
+        }
 
-    public static class CSVParser
-    {
         /// <summary>
         /// タブ区切りCSVテキストから、ヘッダー3行をスキップしてPlanetMasterのリストを生成する
         /// </summary>
         /// <param name="csvText">CSVテキスト</param>
         /// <returns>パースしたPlanetMasterのリスト</returns>
-        public static List<PlanetMaster> ParsePlanetMasterData(string csvText)
+        private static List<PlanetMaster> ParsePlanetMasterData(string csvText)
         {
             var result = new List<PlanetMaster>();
             var lines = csvText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -106,24 +104,6 @@ namespace MM
             }
 
             return tokens.ToArray();
-        }
-    }
-
-    // MasterMemoryへCSVから構築するための例（DatabaseBuilderを利用）
-    public static class MasterMemoryLoader
-    {
-        /// <summary>
-        /// CSVテキストからMasterMemory用のMemoryDatabaseを構築する
-        /// </summary>
-        /// <param name="csvText">CSVテキスト</param>
-        /// <returns>構築されたMemoryDatabase</returns>
-        public static MemoryDatabase BuildDatabaseFromCSV(string csvText)
-        {
-            var records = CSVParser.ParsePlanetMasterData(csvText);
-            var builder = new DatabaseBuilder();
-            builder.Append(records.ToArray());
-            byte[] dbBinary = builder.Build();
-            return new MemoryDatabase(dbBinary);
         }
     }
 }
