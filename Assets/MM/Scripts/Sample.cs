@@ -4,9 +4,9 @@ using MasterMemory;
 using UnityEngine;
 
 [assembly: MasterMemoryGeneratorOptions(Namespace = "MM")]
+
 namespace MM
 {
-    
     /// <summary>
     /// Sample.cs
     /// GAS のエンドポイントから CSV をダウンロードし、
@@ -17,6 +17,7 @@ namespace MM
     {
         // GAS のエンドポイントに渡す環境名（PlanetMaster用）
         private const string EnvironmentName = "dev1";
+
         // データ形式は csv 固定
         private const MasterDataType DataType = MasterDataType.csv;
         private string FilePath => $"{Application.persistentDataPath}/masterdata-{EnvironmentName}.{DataType}";
@@ -27,14 +28,12 @@ namespace MM
         {
             _cts = new CancellationTokenSource();
 
-            // GAS からマスターデータ（CSV）をダウンロード（既存の GetMasterHandler を利用）
-            await GetMasterHandler.GetMaster(EnvironmentName, MasterDataType.csv,  _cts.Token);
-
             // ダウンロード済み CSV ファイルの存在確認
             if (!File.Exists(FilePath))
             {
-                Debug.LogError($"CSV ファイルが存在しません: {FilePath}");
-                return;
+                // GAS からマスターデータ（CSV）をダウンロード（既存の GetMasterHandler を利用）
+                await GetMasterHandler.GetMaster(EnvironmentName, MasterDataType.csv, _cts.Token);
+                Debug.Log("Downloaded CSV");
             }
 
             // CSV ファイルをテキストとして読み込み
