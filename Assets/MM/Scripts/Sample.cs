@@ -45,7 +45,10 @@ namespace MM
             // 生成されたテーブル（PlanetTable）の全データを取得して表示
             // ※PlanetTable は MasterMemory のソースジェネレータにより生成されるプロパティです
             var allPlanets = memoryDatabase.PlanetMasterTable;
-            Debug.Log(allPlanets.Count);
+            Debug.Log($"データの数:{allPlanets.Count}");
+
+            var firstPlanet = allPlanets.FindById(1);
+            Debug.Log($"id:{firstPlanet.Id}, name:{firstPlanet.Name}, nameJP:{firstPlanet.NameJP}");
         }
 
         private void OnDestroy()

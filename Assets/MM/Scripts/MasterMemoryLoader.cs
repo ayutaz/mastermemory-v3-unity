@@ -18,6 +18,11 @@ namespace MM
         {
             var records = ParsePlanetMasterData(csvText);
             var builder = new DatabaseBuilder();
+            // ローカルに保存
+            var stream = new System.IO.MemoryStream();
+            builder.WriteToStream(stream);
+            
+            // データを追加
             builder.Append(records.ToArray());
             byte[] dbBinary = builder.Build();
             return new MemoryDatabase(dbBinary);
