@@ -35,7 +35,7 @@ namespace MM
                 byte[] data = request.downloadHandler.data;
 
                 // データの処理（例：バイナリデータをファイルに保存）
-                string filePath = $"{Application.persistentDataPath}/masterdata-{environment}.{dataType}";
+                string filePath = $"{Application.streamingAssetsPath}/masterdata-{environment}.{dataType}";
                 await System.IO.File.WriteAllBytesAsync(filePath, data, cancelToken);
                 Debug.Log($"Data saved to: {filePath}");
             }
